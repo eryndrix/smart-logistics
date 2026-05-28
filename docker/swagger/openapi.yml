@@ -1,11 +1,161 @@
 openapi: 3.0.3
 info:
-  title: Laravel API Gateway service
+  title: Notification Service
   version: 1.0.0
+  description: API for authentication and Laravel API Gateway service operations
 servers:
   - url: https://localhost
 
-paths: {}
+paths:
+  /api/v1/login:
+    post:
+      summary: User login
+      description: Authenticate user by email and password with optional session persistence
+      operationId: login
+      tags:
+        - Account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@mail.ru
+                  description: User email address
+                password:
+                  type: string
+                  format: password
+                  example: "********"
+                  description: User password
+                remember_me:
+                  type: string
+                  enum: ["0", "1"]
+                  example: "1"
+                  description: Session persistence flag (1 - yes, 0 - no)
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Login successful!
+                      token:
+                        type: string
+                        example: "019e6fc9-53a1-53a1-7034-8e69-bdf0cc6f317e|zlunpAkqqFH7gD4kCtEoKWIOQh2JKL1dpK4YzJOH14a8be71"
+                        description: JWT token for subsequent requests
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Invalid credentials.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+        '429':
+          description: Too many login attempts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 429
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Too many login attempts. Please try again later.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+        '500':
+          description: Token creation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Token creation failed.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
 
 components:
   securitySchemes:

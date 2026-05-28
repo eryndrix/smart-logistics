@@ -2,6 +2,8 @@
 
 Microservice for bulk SMS and Email notifications with traffic prioritization and delivery guarantee.
 
+![Traffic Prioritization Architecture](./src/public/traefik.png)
+
 ## Features
 
 - Bulk SMS/Email notification sending.
