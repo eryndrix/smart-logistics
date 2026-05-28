@@ -1,0 +1,46 @@
+name: quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP 8.5 with required extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.5
+          extensions: mbstring, intl, xml, zip
+
+      - name: Install Composer dependencies for application
+        working-directory: ./src
+        run: composer install --prefer-dist --no-progress --no-scripts
+
+      - name: Install Composer dependencies for libs
+        working-directory: ./src/libs
+        run: composer install --prefer-dist --no-progress --no-scripts
+
+      - name: Copy .env.example to .env
+        working-directory: ./src
+        run: cp .env.example .env
+
+      - name: Generate Laravel application key
+        working-directory: ./src
+        run: php artisan key:generate
+
+      - name: Run PHPStan static analysis
+        working-directory: ./src
+        run: ./vendor/bin/phpstan analyse --memory-limit=512M
+
+      - name: Clear PHPStan cache
+        working-directory: ./src
+        run: ./vendor/bin/phpstan clear-result-cache
+
+      - name: Run PHPunit tests with colors enabled
+        working-directory: ./src
+        run: php artisan test

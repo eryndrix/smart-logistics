@@ -1,0 +1,45 @@
+# Base configuration for all queue workers
+x-queue-base: &queue-base
+  build:
+    context: .
+    dockerfile: ./Dockerfile
+    args:
+      UID: ${UID:-1000}
+      GID: ${GID:-1000}
+  user: "${UID:-1000}:${GID:-1000}"
+  restart: unless-stopped
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  volumes:
+    - ./certs/ca.crt:/certs/ca.crt:ro
+    - ./certs/client.crt:/certs/client.crt:ro
+    - ./certs/client.key:/certs/client.key:ro
+    - ./src:/var/www/html
+  command: ["/usr/local/bin/wait-for-rabbitmq.sh"]
+  networks:
+    - app-network
+
+services:
+  # HIGH priority worker (urgent messages)
+  queue-high:
+    <<: *queue-base
+    environment:
+      RABBITMQ_QUEUE: messages.high
+      RABBITMQ_SLEEP: 1
+
+  # LOW priority worker (normal messages)
+  queue-low:
+    <<: *queue-base
+    environment:
+      RABBITMQ_QUEUE: messages.low
+      RABBITMQ_SLEEP: 3
+
+# Empty volumes
+volumes: {}
+
+# External network
+networks:
+  app-network:
+    external: true

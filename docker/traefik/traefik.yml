@@ -1,0 +1,64 @@
+global:
+  sendAnonymousUsage: false
+  checkNewVersion: false
+
+api:
+  dashboard: true
+  insecure: true
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    watch: true
+  file:
+    directory: /etc/traefik/dynamic
+
+entryPoints:
+  http:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+  https:
+    address: ":443"
+  postgres:
+    address: ":5432"
+  rabbitmq:
+    address: ":5671"
+  redis:
+    address: ":6379"
+    
+http:
+  middlewares:
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+    circuit-breaker:
+      circuitBreaker:
+        expression: "NetworkErrorRatio() > 0.5"
+    retry:
+      retry:
+        attempts: 3
+        initialInterval: "100ms"
+
+accesslog:
+  filePath: "/var/log/traefik/access.log"
+  format: json
+  filters:
+    statusCodes:
+      - "429"
+      - "500"
+      - "502"
+      - "503"
+      - "504"
+    retryAttempts: true
+    minDuration: "10ms"
+
+log:
+  level: INFO
+  format: common
+  filePath: "/var/log/traefik/traefik.log"

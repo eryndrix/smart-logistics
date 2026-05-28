@@ -1,0 +1,19 @@
+parameters:
+  level: max
+  strictRules:
+    allRules: true
+  fileExtensions:
+    - php
+  paths:
+    - app/
+  tmpDir: storage/framework/cache/phpstan
+  reportUnmatchedIgnoredErrors: false
+  treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    -
+      message: '~Parameter #3 \$options of method Redis::set\(\) expects array\|int, string given~'
+      path: '**/Domains/Message/Repositories/Lock/MessageLockMemoryRepository.php'
+
+includes:
+  - vendor/phpstan/phpstan-strict-rules/rules.neon
+  - phar://./vendor/phpstan/phpstan/phpstan.phar/conf/bleedingEdge.neon

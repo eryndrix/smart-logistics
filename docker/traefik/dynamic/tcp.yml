@@ -1,0 +1,38 @@
+tcp:
+  routers:
+    postgres-router:
+      entryPoints:
+        - postgres
+      service: postgres-service
+      rule: "HostSNI(`postgres`)"
+      tls: {}
+    rabbitmq-router:
+      entryPoints:
+        - rabbitmq
+      service: rabbitmq-service
+      rule: "HostSNI(`rabbitmq`)"
+      tls: {}
+    redis-router:
+      entryPoints:
+        - redis
+      service: redis-service
+      rule: "HostSNI(`redis`)"
+      tls: {}
+  services:
+    postgres-service:
+      loadBalancer:
+        servers:
+          - address: "postgres:5432"
+    rabbitmq-service:
+      loadBalancer:
+        servers:
+          - address: "rabbitmq:5671"
+    redis-service:
+      loadBalancer:
+        servers:
+          - address: "redis:6379"
+  middlewares:
+    ip-allowlist:
+      ipAllowList:
+        sourceRange:
+          - "127.0.0.1/32"

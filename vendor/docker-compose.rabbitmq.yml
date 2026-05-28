@@ -1,0 +1,31 @@
+services:
+  # RabbitMQ message broker service
+  rabbitmq:
+    image: rabbitmq:4.2.0
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "127.0.0.1:15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./docker/rabbitmq/plugins/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - ./docker/rabbitmq/plugins:/usr/lib/rabbitmq/plugins:ro
+      - ./docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./certs/rabbitmq.crt:/etc/rabbitmq/certs/rabbitmq.crt:ro
+      - ./certs/rabbitmq.key:/etc/rabbitmq/certs/rabbitmq.key:ro
+      - ./certs/ca.crt:/etc/rabbitmq/certs/ca.crt:ro
+    networks:
+      - app-network
+
+# Empty volumes
+volumes:
+  rabbitmq-data:
+
+# External network
+networks:
+  app-network:
+    external: true

@@ -1,0 +1,37 @@
+{
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "users": [
+    {
+      "name": "rmq_service_ckl01q",
+      "password": "5ZybGKFhSJjvHgXC8SB1",
+      "tags": "administrator"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "rmq_service_ckl01q",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "queues": [
+    {
+      "name": "messages.high",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false
+    },
+    {
+      "name": "messages.low",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false
+    }
+  ]
+}

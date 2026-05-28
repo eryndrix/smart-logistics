@@ -1,0 +1,35 @@
+services:
+  # Swagger UI service
+  swagger-ui:
+    image: swaggerapi/swagger-ui:v5.31.0
+    restart: unless-stopped
+    user: "101:101"
+    environment:
+      SWAGGER_JSON: /var/www/html/openapi.yml
+    volumes:
+      - ./docker/swagger/openapi.yml:/var/www/html/openapi.yml:ro
+    command: []
+    networks:
+      - app-network
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+      - /var/run:rw,noexec,nosuid,size=64m
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.swagger.rule=PathPrefix(`/docs/`)"
+      - "traefik.http.routers.swagger.entrypoints=https"
+      - "traefik.http.routers.swagger.tls=true"
+      - "traefik.http.routers.swagger.middlewares=swagger-auth@file,swagger-strip@file"
+      - "traefik.http.services.swagger.loadbalancer.server.port=8080"
+
+# Empty volumes
+volumes: {}
+
+# External network
+networks:
+  app-network:
+    external: true

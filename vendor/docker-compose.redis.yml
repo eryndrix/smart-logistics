@@ -1,0 +1,22 @@
+services:
+  # Redis cache service
+  redis:
+    image: redis:8.2.3
+    restart: unless-stopped
+    volumes:
+      - ./certs/redis.crt:/usr/local/etc/redis/redis.crt:ro
+      - ./certs/redis.key:/usr/local/etc/redis/redis.key:ro
+      - ./certs/ca.crt:/usr/local/etc/redis/ca.crt:ro
+      - ./certs/redis.dh:/usr/local/etc/redis/redis.dh:ro
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    networks:
+      - app-network
+
+# Empty volumes
+volumes: {}
+
+# External network
+networks:
+  app-network:
+    external: true

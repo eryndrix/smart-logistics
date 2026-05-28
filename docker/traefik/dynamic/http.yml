@@ -1,0 +1,16 @@
+http:
+  middlewares:
+    swagger-strip:
+      stripPrefix:
+        prefixes:
+          - "/docs/"
+    telescope-auth:
+      basicAuth:
+        users:
+          - "telescope:$2y$05$cdusFy2gCYVGQKa17WMjKeT7Z74.8kHJgmH5hR6xubmSD8uALapI."
+        realm: "Telescope"
+    swagger-auth:
+      basicAuth:
+        users:
+          - "swagger:$2y$05$Nf2wHGEcko7aKtG2s.mHYuBD5N3XIp79WPtLNbNbBioGSlbCH6EGK"
+        realm: "Swagger UI"

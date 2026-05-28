@@ -1,0 +1,62 @@
+{
+  "version": 3,
+  "name": "Krakend API Gateway",
+  "port": 8000,
+  "timeout": "5000ms",
+  "debug": true,
+  "debug_endpoint": true,
+  "output_encoding": "json",
+  "tls": {
+    "keys": [
+      {
+        "public_key": "/etc/ssl/server.crt",
+        "private_key": "/etc/ssl/server.key"
+      }
+    ],
+    "min_version": "TLS12",
+    "max_version": "TLS13"
+  },
+  "client_tls": {
+    "allow_insecure_connections": true,
+    "min_version": "TLS12",
+    "max_version": "TLS13"
+  },
+  "extra_config": {
+    "security/cors": {
+      "allow_origins": [],
+      "allow_credentials": true,
+      "max_age": "12h"
+    },
+    "router": {
+      "return_error_msg": true
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/api/v1/subscribers",
+      "method": "GET",
+      "input_headers": ["Accept", "Content-Type"],
+      "backend": [
+        {
+          "host": ["http://app:9000"],
+          "url_pattern": "/subscribers.json",
+          "encoding": "json",
+          "is_collection": true,
+          "extra_config": {
+            "backend/http": {
+              "return_error_code": true
+            },
+            "backend/http/client": {
+              "client_tls": {
+                "allow_insecure_connections": true,
+                "min_version": "TLS12",
+                "max_version": "TLS13",
+                "ca_certs": ["/etc/ssl/ca.crt"]
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
