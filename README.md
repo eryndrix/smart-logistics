@@ -121,12 +121,6 @@ $ docker compose exec app php artisan key:generate
 $ docker compose exec app php artisan migrate:fresh --seed
 ```
 
-### 7. Verify Security Scan
-
-```
-$ make security-scan  # Runs Trivy in ~2 seconds with cache
-```
-
 ### 8. Makefile Commands
 
 | Command               | Description                                                      |
