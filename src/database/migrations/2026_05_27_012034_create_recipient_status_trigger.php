@@ -52,23 +52,6 @@ return new class extends Migration
                     END IF;
                     RETURN NEW;
                 END IF;
-
-                IF TG_OP = 'DELETE' THEN
-                    INSERT INTO "message_status_logs" (
-                        "message_recipient_id",
-                        "from_status",
-                        "to_status",
-                        "reason",
-                        "occurred_at"
-                    ) VALUES (
-                        OLD."id",
-                        OLD."status",
-                        NULL,
-                        NULL,
-                        NOW()
-                    );
-                    RETURN OLD;
-                END IF;
                 
                 RETURN NULL;
             END;
@@ -77,7 +60,7 @@ return new class extends Migration
 
         DB::statement(query: rtrim(string: <<<'SQL'
             CREATE TRIGGER "recipient_status_change_trigger"
-            AFTER INSERT OR UPDATE OR DELETE ON "message_recipients"
+            AFTER INSERT OR UPDATE ON "message_recipients"
             FOR EACH ROW
             EXECUTE FUNCTION "log_message_recipient_status_change"();
         SQL));
