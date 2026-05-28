@@ -32,7 +32,6 @@ Microservice for bulk SMS and Email notifications with traffic prioritization an
 
 ## Performance Highlights
 
-- RoadRunner Octane: 500 reqs/worker, RPC port 6001
 - OPcache: Enabled with 128MB memory
 - Redis caching via pipeline
 - PostgreSQL indexes: GIN trigram + B-tree
