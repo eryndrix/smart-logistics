@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         DB::statement(query: rtrim(string: <<<'SQL'
@@ -80,6 +83,9 @@ return new class extends Migration
         SQL));
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         DB::statement(query: rtrim(string: <<<'SQL'
