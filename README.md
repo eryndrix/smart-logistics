@@ -39,14 +39,6 @@ Microservice for bulk SMS and Email notifications with traffic prioritization an
 - PostgreSQL indexes: GIN trigram + B-tree
 - TLS 1.3: 2048-bit RSA keys, DH params
 
-## Database Extensions
-
-TimescaleDB 2.25.2-pg18 + extensions:
-
-```
-uuid-ossp, pgcrypto, pg_trgm, btree_gin, timescaledb, vector, btree_gist, unaccent
-```
-
 ## Quick Start
 
 ### Prerequisites
