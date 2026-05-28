@@ -135,8 +135,6 @@ $ make security-scan  # Runs Trivy in ~2 seconds with cache
 | make start            | Start existing containers                                        |
 | make stop             | Stop and remove containers + volumes                             |
 | make restart          | Restart all containers                                           |
-| make security-scan    | Run Trivy vulnerability scan only                                |
-| make generate-secrets | Generate strong random passwords (DB, RabbitMQ)                  |
 | make clean            | Full Docker cleanup (containers, images, volumes, networks)      |
 | make help             | Show all available commands                                      |
 
