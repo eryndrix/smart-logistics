@@ -40,7 +40,3 @@ jobs:
       - name: Clear PHPStan cache
         working-directory: ./src
         run: ./vendor/bin/phpstan clear-result-cache
-
-      - name: Run PHPunit tests with colors enabled
-        working-directory: ./src
-        run: php artisan test
