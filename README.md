@@ -121,7 +121,7 @@ $ docker compose exec app php artisan key:generate
 $ docker compose exec app php artisan migrate:fresh --seed
 ```
 
-### 8. Makefile Commands
+## Useful Makefile Commands
 
 | Command               | Description                                                      |
 | --------------------- | ---------------------------------------------------------------- |
