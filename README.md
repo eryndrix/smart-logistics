@@ -138,7 +138,7 @@ Override user IDs (for file permissions):
 $ make build USER_ID=1000 GROUP_ID=1000
 ```
 
-### Security & Auth
+## Security & Auth
 
 | Endpoint                      | Service        | Auth                             |
 | ----------------------------- | -------------- | -------------------------------- |
