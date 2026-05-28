@@ -12,9 +12,5 @@ final class LogoutCommand extends Command
      */
     public function __construct(
         public private(set) User $user
-    ) {
-        parent::__construct(data: [
-            'user' => $this->user,
-        ]);
-    }
+    ) {}
 }

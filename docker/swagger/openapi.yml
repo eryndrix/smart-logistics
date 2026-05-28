@@ -58,7 +58,7 @@ paths:
                         example: Login successful!
                       token:
                         type: string
-                        example: "019e6fc9-53a1-53a1-7034-8e69-bdf0cc6f317e|zlunpAkqqFH7gD4kCtEoKWIOQh2JKL1dpK4YzJOH14a8be71"
+                        example: "019e6fc9-53a1-7034-8e69-bdf0cc6f317e|zlunpAkqqFH7gD4kCtEoKWIOQh2JKL1dpK4YzJOH14a8be71"
                         description: JWT token for subsequent requests
                   metadata:
                     type: object
@@ -144,6 +144,698 @@ paths:
                       message:
                         type: string
                         example: Token creation failed.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+
+  /api/v1/check-me:
+    get:
+      summary: Get authenticated user
+      description: Retrieve authenticated user information using Bearer token
+      operationId: getAuthenticatedUser
+      tags:
+        - Account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful retrieval of user information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "019e6fc9-14ab-7d2c-8890-09521f441915"
+                        description: User ID
+                      name:
+                        type: string
+                        example: Test
+                        description: User name
+                      email:
+                        type: string
+                        format: email
+                        example: admin@mail.ru
+                        description: User email address
+                      datetime:
+                        type: object
+                        properties:
+                          created_at:
+                            type: string
+                            format: date-time
+                            example: "2026-05-28 23:11:49"
+                            description: User creation timestamp
+                          updated_at:
+                            type: string
+                            format: date-time
+                            example: "2026-05-28 23:12:05"
+                            description: User last update timestamp
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fd9-65ed-701d-8728-d09dbafab63c"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:29:38+05:00"
+                        description: Response timestamp
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You are not authenticated.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+
+  /api/v1/logout:
+    post:
+      summary: User logout
+      description: Logout authenticated user and invalidate Bearer token
+      operationId: logout
+      tags:
+        - Account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful logout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Logout successful!
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fe1-fbcc-70a3-b9b6-06e55dbed1d3"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:39:01+05:00"
+                        description: Response timestamp
+        '500':
+          description: Failed to logout
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Failed to log out. Please try again.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+
+  /api/v1/messages/urgent:
+    post:
+      summary: Send urgent message
+      description: Send an urgent message via email or SMS to multiple recipients
+      operationId: sendUrgentMessage
+      tags:
+        - Message
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - channel
+                - message
+                - recipient_ids
+              properties:
+                channel:
+                  type: string
+                  enum: ["mail", "sms"]
+                  example: mail
+                  description: Message channel (mail or sms)
+                message:
+                  type: string
+                  example: Test text message...
+                  description: Message content
+                recipient_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  example:
+                    - "e0377d38-5350-47a2-ba42-30f1a4e6c4e6"
+                    - "3ad5fe67-a658-4005-8aa7-30f9aad7afe9"
+                    - "3d1ed8a0-5bb3-435a-86ea-4ba8ebac119c"
+                  description: Array of recipient user IDs
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: The message was sent successfully!
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fef-cf7f-71a0-b995-3d3d3c67bb33"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:54:07+05:00"
+                        description: Response timestamp
+        '500':
+          description: MessageJob failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: MessageJob failed.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+
+  /api/v1/messages/normal:
+    post:
+      summary: Send normal message
+      description: Send a normal priority message via email or SMS to multiple recipients
+      operationId: sendNormalMessage
+      tags:
+        - Message
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - channel
+                - message
+                - recipient_ids
+              properties:
+                channel:
+                  type: string
+                  enum: ["mail", "sms"]
+                  example: sms
+                  description: Message channel (mail or sms)
+                message:
+                  type: string
+                  example: Test text message...
+                  description: Message content
+                recipient_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  example:
+                    - "e0377d38-5350-47a2-ba42-30f1a4e6c4e6"
+                    - "3ad5fe67-a658-4005-8aa7-30f9aad7afe9"
+                    - "3d1ed8a0-5bb3-435a-86ea-4ba8ebac119c"
+                  description: Array of recipient user IDs
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: The message was sent successfully!
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fef-cf7f-71a0-b995-3d3d3c67bb33"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:54:07+05:00"
+                        description: Response timestamp
+        '500':
+          description: MessageJob failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: MessageJob failed.
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6fc9-52da-71dc-8eb7-6c1a46774197"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-28T23:12:05+05:00"
+                        description: Response timestamp
+
+  /api/v1/journals/{subscriberId}:
+    get:
+      summary: Get subscriber journal
+      description: Retrieve message journal for a specific subscriber showing status transitions
+      operationId: getSubscriberJournal
+      tags:
+        - Journal
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: subscriberId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: e0377d38-5350-47a2-ba42-30f1a4e6c4e6
+          description: Subscriber ID
+      responses:
+        '200':
+          description: Successful retrieval of journal list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      '0':
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            example: "019e6fef-d327-7b7d-b40d-6008c43449c1"
+                            description: Journal entry ID
+                          message_recipient_id:
+                            type: string
+                            format: uuid
+                            example: "019e6fef-d324-7330-8f9c-7537a375d3b1"
+                            description: Message recipient ID
+                          from_status:
+                            type: string
+                            nullable: true
+                            example: null
+                            description: Previous status
+                          to_status:
+                            type: string
+                            example: queued
+                            description: New status
+                          reason:
+                            type: string
+                            nullable: true
+                            example: null
+                            description: Reason for status change
+                          occurred_at:
+                            type: string
+                            format: date-time
+                            example: "2026-05-28 13:54:08"
+                            description: When the status change occurred
+                          recipient:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                example: "019e6fef-d324-7330-8f9c-7537a375d3b1"
+                                description: Recipient ID
+                              message_id:
+                                type: string
+                                format: uuid
+                                example: "019e6fef-d31f-728e-ab63-08883756e5d3"
+                                description: Message ID
+                              subscriber_id:
+                                type: string
+                                format: uuid
+                                example: "e0377d38-5350-47a2-ba42-30f1a4e6c4e6"
+                                description: Subscriber ID
+                              address:
+                                type: string
+                                example: user1@example.com
+                                description: Recipient address (email or phone)
+                              status:
+                                type: string
+                                example: delivered
+                                description: Current recipient status
+                              error:
+                                type: string
+                                nullable: true
+                                example: null
+                                description: Error message if any
+                              datetime:
+                                type: object
+                                properties:
+                                  created_at:
+                                    type: string
+                                    format: date-time
+                                    example: "2026-05-28 23:54:08"
+                                    description: Creation timestamp
+                                  updated_at:
+                                    type: string
+                                    format: date-time
+                                    example: "2026-05-28 23:54:08"
+                                    description: Last update timestamp
+                      '1':
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            example: "019e6fef-d340-7dd1-80e3-8af3fe11127d"
+                            description: Journal entry ID
+                          message_recipient_id:
+                            type: string
+                            format: uuid
+                            example: "019e6fef-d324-7330-8f9c-7537a375d3b1"
+                            description: Message recipient ID
+                          from_status:
+                            type: string
+                            nullable: true
+                            example: queued
+                            description: Previous status
+                          to_status:
+                            type: string
+                            example: sent
+                            description: New status
+                          reason:
+                            type: string
+                            nullable: true
+                            example: null
+                            description: Reason for status change
+                          occurred_at:
+                            type: string
+                            format: date-time
+                            example: "2026-05-28 13:54:08"
+                            description: When the status change occurred
+                          recipient:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                example: "019e6fef-d324-7330-8f9c-7537a375d3b1"
+                                description: Recipient ID
+                              message_id:
+                                type: string
+                                format: uuid
+                                example: "019e6fef-d31f-728e-ab63-08883756e5d3"
+                                description: Message ID
+                              subscriber_id:
+                                type: string
+                                format: uuid
+                                example: "e0377d38-5350-47a2-ba42-30f1a4e6c4e6"
+                                description: Subscriber ID
+                              address:
+                                type: string
+                                example: user1@example.com
+                                description: Recipient address (email or phone)
+                              status:
+                                type: string
+                                example: delivered
+                                description: Current recipient status
+                              error:
+                                type: string
+                                nullable: true
+                                example: null
+                                description: Error message if any
+                              datetime:
+                                type: object
+                                properties:
+                                  created_at:
+                                    type: string
+                                    format: date-time
+                                    example: "2026-05-28 23:54:08"
+                                    description: Creation timestamp
+                                  updated_at:
+                                    type: string
+                                    format: date-time
+                                    example: "2026-05-28 23:54:08"
+                                    description: Last update timestamp
+                      '2':
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            example: "019e6fef-d342-7d01-be06-cfd573b9c47e"
+                            description: Journal entry ID
+                          message_recipient_id:
+                            type: string
+                            format: uuid
+                            example: "019e6fef-d324-7330-8f9c-7537a375d3b1"
+                            description: Message recipient ID
+                          from_status:
+                            type: string
+                            nullable: true
+                            example: sent
+                            description: Previous status
+                          to_status:
+                            type: string
+                            example: delivered
+                            description: New status
+                          reason:
+                            type: string
+                            nullable: true
+                            example: null
+                            description: Reason for status change
+                          occurred_at:
+                            type: string
+                            format: date-time
+                            example: "2026-05-28 13:54:08"
+                            description: When the status change occurred
+                          recipient:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                example: "019e6fef-d324-7330-8f9c-7537a375d3b1"
+                                description: Recipient ID
+                              message_id:
+                                type: string
+                                format: uuid
+                                example: "019e6fef-d31f-728e-ab63-08883756e5d3"
+                                description: Message ID
+                              subscriber_id:
+                                type: string
+                                format: uuid
+                                example: "e0377d38-5350-47a2-ba42-30f1a4e6c4e6"
+                                description: Subscriber ID
+                              address:
+                                type: string
+                                example: user1@example.com
+                                description: Recipient address (email or phone)
+                              status:
+                                type: string
+                                example: delivered
+                                description: Current recipient status
+                              error:
+                                type: string
+                                nullable: true
+                                example: null
+                                description: Error message if any
+                              datetime:
+                                type: object
+                                properties:
+                                  created_at:
+                                    type: string
+                                    format: date-time
+                                    example: "2026-05-28 23:54:08"
+                                    description: Creation timestamp
+                                  updated_at:
+                                    type: string
+                                    format: date-time
+                                    example: "2026-05-28 23:54:08"
+                                    description: Last update timestamp
+                      meta:
+                        type: object
+                        properties:
+                          current_page:
+                            type: integer
+                            example: 1
+                          from:
+                            type: integer
+                            example: 1
+                          last_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 15
+                          to:
+                            type: integer
+                            example: 3
+                          total:
+                            type: integer
+                            example: 3
+                      links:
+                        type: object
+                        properties:
+                          first:
+                            type: string
+                            format: uri
+                            example: "http://localhost/api/v1/journals/e0377d38-5350-47a2-ba42-30f1a4e6c4e6?page=1"
+                          last:
+                            type: string
+                            format: uri
+                            example: "http://localhost/api/v1/journals/e0377d38-5350-47a2-ba42-30f1a4e6c4e6?page=1"
+                          prev:
+                            type: string
+                            nullable: true
+                            example: null
+                          next:
+                            type: string
+                            nullable: true
+                            example: null
+                  metadata:
+                    type: object
+                    properties:
+                      request_id:
+                        type: string
+                        example: "019e6ffa-4da1-73f5-93df-8b138f1d5b0a"
+                        description: Unique request identifier
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: "2026-05-29T00:05:35+05:00"
+                        description: Response timestamp
+        '404':
+          description: Failed to retrieve journal list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 404
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Failed to retrieve the journal list.
                   metadata:
                     type: object
                     properties:

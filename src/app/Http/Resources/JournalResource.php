@@ -50,7 +50,7 @@ final class JournalResource extends JsonResource
             ),
         ];
 
-        if ($journal->relationLoaded(key: 'recipient')) {
+        if (!$journal->relationLoaded(key: 'recipient')) {
             /**
              * @phpstan-var \Illuminate\Database\Eloquent\Relations\BelongsTo<
              *     \App\Models\Recipient,
