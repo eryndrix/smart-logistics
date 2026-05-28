@@ -7,8 +7,6 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-    ports:
-      - "127.0.0.1:15672:15672"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
       - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
